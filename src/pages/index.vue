@@ -9,7 +9,7 @@
                             <div class="children">
                                 <ul v-for="(item, index) in menuList" v-bind:key="index">
                                     <li v-for="(sub, subindex) in item" v-bind:key="subindex">
-                                        <a v-bind:href="sub?'/#/product'+sub.id:''">
+                                        <a v-bind:href="sub?'/#/product/'+sub.id:''">
                                             <img v-bind:src="sub?sub.img:'/imgs/item-box-1.png'" alt="">
                                             {{sub?sub.name:'小米9'}}
                                         </a>
@@ -49,16 +49,50 @@
                 </div>
                 <swiper :options="swiperOptions">
                     <swiper-slide v-for="(item, index) in slideList" v-bind:key="index">
-                        <a v-bind:href="'/#/product'+item.id"><img v-bind:src="item.img"></a>
+                        <a v-bind:href="'/#/product/'+item.id"><img v-bind:src="item.img"></a>
                     </swiper-slide>
                     <div class="swiper-pagination" slot="pagination"></div>
                     <div class="swiper-button-prev" slot="button-prev"></div>
                     <div class="swiper-button-next" slot="button-next"></div>
                 </swiper>
             </div>
-            <div class="ads-box"></div>
-            <div class="banner"></div>
-            <div class="product-box"></div>
+            <div class="ads-box">
+                <a v-bind:href="'/#/product/'+item.id" v-for="(item, index) in adsList" v-bind:key="index">
+                    <img v-bind:src="item.img" alt="">
+                </a>
+            </div>
+            <div class="banner">
+                <a href="/#/product/30">
+                    <img src="/imgs/banner-1.png" alt="">
+                </a>
+            </div>
+        </div>
+        <div class="product-box">
+            <div class="container">
+                <h2>手机</h2>
+                <div class="wrapper">
+                    <div class="banner-left">
+                        <a href="/#/product/35">
+                            <img src="/imgs/mix-alpha.jpg" alt="">
+                        </a>
+                    </div>
+                    <div class="list-box">
+                        <div class="list" v-for="(arr, index) in phoneList" v-bind:key="index">
+                            <div class="item" v-for="(item, i) in arr" v-bind:key="i">
+                                <span v-bind:class="i%2==0?'new-pro':'kill-pro'">新品</span>
+                                <div class="item-img">
+                                    <img v-bind:src="item.mainImage" alt="">
+                                </div>
+                                <div class="item-info">
+                                    <h3>{{item.name}}</h3>
+                                    <p>{{item.subtitle}}</p>
+                                    <p class="price">{{item.price}}元</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <ServiceBar></ServiceBar>
     </div>
@@ -66,8 +100,9 @@
 
 <script>
     import ServiceBar from "../components/ServiceBar";
-    import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+    import {Swiper, SwiperSlide} from 'vue-awesome-swiper'
     import 'swiper/css/swiper.css'
+
     export default {
         name: "index",
         components: {
@@ -139,8 +174,41 @@
                             name: '移动4G专区'
                         }
                     ],
-                    [0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]
-                ]
+                    [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]
+                ],
+                adsList: [
+                    {
+                        id: 33,
+                        img: '/imgs/ads/ads-1.png'
+                    },
+                    {
+                        id: 48,
+                        img: '/imgs/ads/ads-2.jpg'
+                    }, {
+                        id: 45,
+                        img: '/imgs/ads/ads-3.png'
+                    }, {
+                        id: 47,
+                        img: '/imgs/ads/ads-4.jpg'
+                    }
+                ],
+                phoneList: []
+            }
+        },
+        mounted() {
+            this.init();
+        },
+        methods: {
+            init() {
+                this.axios.get('/products', {
+                    params: {
+                        categoryId: 100012,
+                        pageSize: 14
+                    }
+                }).then(res => {
+                    res.list = res.list.slice(6,14);
+                    this.phoneList = [res.list.slice(0,4), res.list.slice(4,8)]
+                })
             }
         }
     }
@@ -149,84 +217,190 @@
 <style lang="scss">
     @import "./../assets/scss/mixin.scss";
     @import "./../assets/scss/config.scss";
+
     .index {
-     .swiper-box {
-         .nav-menu {
-             position: absolute;
-             width: 264px;
-             height: 451px;
-             z-index: 9;
-             padding: 26px 0;
-             box-sizing: border-box;
-             background-color: #55585a7a;
-             .menu-warp {
-                 .menu-item {
-                     height: 50px;
-                     line-height: 50px;
-                     a {
-                         position: relative;
-                         display: block;
-                         font-size: 16px;
-                         color: #ffffff;
-                         padding-left: 30px;
-                         &:after {
-                             position: absolute;
-                             right: 30px;
-                             top: 17.5px;
-                             content: ' ';
-                             @include bgImg(10px, 15px, '/imgs/icon-arrow.png');
-                         }
-                     }
-                     &:hover {
-                         background-color: $colorA;
-                         .children {
-                             display: block;
-                         }
-                     }
-                     .children {
-                         display: none;
-                         width: 962px;
-                         height: 451px;
-                         background-color: #ffffff;
-                         position: absolute;
-                         top: 0;
-                         left: 264px;
-                         border: 1px solid #e5e5e5;
-                         ul {
-                             display: flex;
-                             justify-content: space-between;
-                             height: 75px;
-                             li {
-                                 height: 75px;
-                                 line-height: 75px;
-                                 flex: 1;
-                                 padding-left: 23px;
-                             }
-                             img {
-                                 width: 42px;
-                                 height: 35px;
-                                 margin-right: 15px;
-                                 vertical-align: middle;
-                             }
-                             a {
-                                 color: #333333;
-                                 font-size: 14px;
-                             }
-                         }
-                     }
-                 }
-             }
-         }
-         .swiper-container {
-             height: 451px;
-             .swiper-button-prev {
-                 left: 274px;
-             }
-             img {
-                 width: 100%;
-                 height: 100%;
-             }
-         }
-     }
+        .swiper-box {
+            .nav-menu {
+                position: absolute;
+                width: 264px;
+                height: 451px;
+                z-index: 9;
+                padding: 26px 0;
+                box-sizing: border-box;
+                background-color: #55585a7a;
+
+                .menu-warp {
+                    .menu-item {
+                        height: 50px;
+                        line-height: 50px;
+
+                        a {
+                            position: relative;
+                            display: block;
+                            font-size: 16px;
+                            color: #ffffff;
+                            padding-left: 30px;
+
+                            &:after {
+                                position: absolute;
+                                right: 30px;
+                                top: 17.5px;
+                                content: ' ';
+                                @include bgImg(10px, 15px, '/imgs/icon-arrow.png');
+                            }
+                        }
+
+                        &:hover {
+                            background-color: $colorA;
+
+                            .children {
+                                display: block;
+                            }
+                        }
+
+                        .children {
+                            display: none;
+                            width: 962px;
+                            height: 451px;
+                            background-color: #ffffff;
+                            position: absolute;
+                            top: 0;
+                            left: 264px;
+                            border: 1px solid #e5e5e5;
+
+                            ul {
+                                display: flex;
+                                justify-content: space-between;
+                                height: 75px;
+
+                                li {
+                                    height: 75px;
+                                    line-height: 75px;
+                                    flex: 1;
+                                    padding-left: 23px;
+                                }
+
+                                img {
+                                    width: 42px;
+                                    height: 35px;
+                                    margin-right: 15px;
+                                    vertical-align: middle;
+                                }
+
+                                a {
+                                    color: #333333;
+                                    font-size: 14px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .swiper-container {
+                height: 451px;
+                .swiper-button-prev {
+                    left: 274px;
+                }
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+        .ads-box {
+            @include flex();
+            margin-top: 14px;
+            margin-bottom: 30px;
+            a {
+                width: 296px;
+                height: 167px;
+            }
+        }
+        .banner {
+            margin-bottom: 50px;
+        }
+        .product-box {
+            background-color: $colorJ;
+            padding: 30px 0 50px 0;
+            h2 {
+                color: #333333;
+                font-size: 22px;
+                height: 21px;
+                line-height: 21px;
+                margin-bottom: 20px;
+            }
+            .wrapper {
+                display: flex;
+                .banner-left {
+                    margin-right: 16px;
+                    img {
+                        width: 224px;
+                        height: 619px;
+                    }
+                }
+                .list-box {
+                    .list {
+                        @include flex();
+                        width: 986px;
+                        margin-bottom: 14px;
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+                        .item {
+                            width: 236px;
+                            height: 302px;
+                            background-color: #ffffff;
+                            text-align: center;
+                            span {
+                                display: inline-block;
+                                width: 67px;
+                                height: 24px;
+                                font-size: 14px;
+                                line-height: 24px;
+                                color: #ffffff;
+                                &.new-pro {
+                                    background-color: #7ECF68;
+                                }
+                                &.kill-pro {
+                                    background-color: #E82626;
+                                }
+                            }
+                            .item-img {
+                                img {
+                                    height: 195px;
+                                    width: 100%;
+                                }
+                            }
+                            .item-info {
+                                h3 {
+                                    font-size: $fontJ;
+                                    color: $colorB;
+                                    line-height: 14px;
+                                    font-weight: bold;
+                                }
+                                p {
+                                    color: $colorD;
+                                    line-height: 13px;
+                                    margin-top: 6px;
+                                    margin-bottom: 13px;
+                                }
+                                .price {
+                                    color: #F20A0A;
+                                    font-size: $fontJ;
+                                    font-weight: bold;
+                                    cursor: pointer;
+                                    &:after {
+                                        content: ' ';
+                                        @include bgImg(22px,22px,'/imgs/icon-cart-hover.png');
+                                        margin-left: 5px;
+                                        vertical-align: middle;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 </style>
