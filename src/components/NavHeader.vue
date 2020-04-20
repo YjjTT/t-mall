@@ -12,7 +12,7 @@
                     <a href="javascript:;" v-if="username">{{username}}</a>
                     <a href="javascript:;" v-if="!username" @click="goToLogin">登录</a>
                     <a href="javascript:;">我的订单</a>
-                    <a href="javascript:;" class="my-cart" @click="goToCart"><span class="icon-cart"></span>购物车</a>
+                    <a href="javascript:;" class="my-cart" @click="goToCart"><span class="icon-cart"></span>购物车{{cartCount}}</a>
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@
                                 <li class="product" v-for="(item, index) in phoneList" :key="index">
                                     <a v-bind:href="'/#/product/'+item.id" target="_blank">
                                         <div class="pro-img">
-                                            <img :src="item.mainImage" :alt="item.subtitle">
+                                            <img v-lazy="item.mainImage" :alt="item.subtitle">
                                         </div>
                                         <div class="pro-name">{{item.name}}</div>
                                         <div class="pro-price">{{item.price | currency}}</div>
@@ -49,7 +49,7 @@
                                 <li class="product">
                                     <a href="" target="_blank">
                                         <div class="pro-img">
-                                            <img src="/imgs/nav-img/nav-3-2.jpg" alt="">
+                                            <img v-lazy="'/imgs/nav-img/nav-3-2.jpg'" alt="">
                                         </div>
                                         <div class="pro-name">Redmi 智能电视 MAX 98"</div>
                                         <div class="pro-price">1799元</div>
@@ -116,16 +116,25 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex'
     export default {
         name: "nav-header",
         data() {
             return{
-                username: 'WNLH',
                 phoneList: []
             }
         },
         mounted() {
             this.getProductList()
+        },
+        computed: {
+            // username() {
+            //     return this.$store.state.username;
+            // },
+            // cartCount() {
+            //     return this.$store.state.cartCount;
+            // }
+            ...mapActions(['username', 'cartCount'])
         },
         filters: {
             currency(val) {
