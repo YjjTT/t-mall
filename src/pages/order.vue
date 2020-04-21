@@ -8,7 +8,7 @@
 
 <script>
     import NavFooter from "../components/NavFooter";
-    import OrderHeader from '../components/OrederHeader'
+    import OrderHeader from '../components/OrderHeader'
     export default {
         name: "order",
         components: {NavFooter,OrderHeader}
