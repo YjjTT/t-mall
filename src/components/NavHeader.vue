@@ -12,7 +12,7 @@
                     <a href="javascript:;" v-if="username">{{username}}</a>
                     <a href="javascript:;" v-if="!username" @click="goToLogin">登录</a>
                     <a href="javascript:;" v-if="username" @click="logout">退出</a>
-                    <a href="javascript:;" v-if="username">我的订单</a>
+                    <a href="javascript:;" v-if="username" @click="goToOrder">我的订单</a>
                     <a href="javascript:;" class="my-cart" @click="goToCart"><span class="icon-cart"></span>购物车({{cartCount}})</a>
                 </div>
             </div>
@@ -175,6 +175,9 @@
                 this.axios.get('/carts/products/sum').then((res=0) => {
                     this.$store.dispatch('saveCartCount', res)
                 })
+            },
+            goToOrder() {
+                this.$router.push('/order');
             }
         }
     }
