@@ -177,7 +177,7 @@
                 })
             },
             goToOrder() {
-                this.$router.push('/order');
+                this.$router.push('/order/list');
             }
         }
     }
