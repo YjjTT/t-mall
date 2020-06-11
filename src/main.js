@@ -20,7 +20,7 @@ if(mock) {
 // 根据前端的跨域方式做调整
 axios.defaults.baseURL = '/api'; //接口代理 vue.config.js
 // axios.defaults.baseURL = env.baseURL; // 根据环境变量获取不同的请求地址
-axios.defaults.timeout = 8000;
+axios.defaults.timeout = 15000;
 
 axios.interceptors.response.use(function (response) {
     let res = response.data;
